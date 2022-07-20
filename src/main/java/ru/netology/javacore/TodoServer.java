@@ -38,7 +38,6 @@ public class TodoServer {
                         break;
                 }
                 out.println(todos.getAllTasks());
-                System.out.println(typeTask);
             } catch (IOException e) {
                 e.printStackTrace();
             }
