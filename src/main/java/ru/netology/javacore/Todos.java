@@ -27,4 +27,11 @@ public class Todos {
         }
         return stringBuilder.toString();
     }
+
+    @Override
+    public String toString() {
+        return "Todos{" +
+                "Tasks=" + tasks +
+                '}';
+    }
 }
