@@ -24,7 +24,7 @@ public class TodoServer {
         ServerSocket serverSocket = new ServerSocket(port);
         while (true) {
             try (Socket socket = serverSocket.accept();
-                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                 PrintWriter out = new PrintWriter(socket.getOutputStream());
                  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                 String json = in.readLine();
                 Gson gson = new Gson();
@@ -39,6 +39,7 @@ public class TodoServer {
                 }
                 out.println(todos.getAllTasks());
             } catch (IOException e) {
+                System.out.println("Не могу стартовать сервер");
                 e.printStackTrace();
             }
         }
