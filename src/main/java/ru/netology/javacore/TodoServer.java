@@ -19,29 +19,31 @@ public class TodoServer {
     }
 
     public void start() throws IOException {
-
         System.out.println("Starting server at " + port + "...");
-        ServerSocket serverSocket = new ServerSocket(port);
-        while (true) {
-            try (Socket socket = serverSocket.accept();
-                 PrintWriter out = new PrintWriter(socket.getOutputStream());
-                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                String json = in.readLine();
-                Gson gson = new Gson();
-                TypeTask typeTask = gson.fromJson(json, TypeTask.class);
-                switch (typeTask.type) {
-                    case ("ADD"):
-                        todos.addTask(typeTask.task);
-                        break;
-                    case ("REMOVE"):
-                        todos.removeTask(typeTask.task);
-                        break;
+        try (ServerSocket serverSocket = new ServerSocket(port);) {
+            while (true) {
+                try (
+                        Socket socket = serverSocket.accept();
+                        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        PrintWriter out = new PrintWriter(socket.getOutputStream());
+                ) {
+                    String json = in.readLine();
+                    Gson gson = new Gson();
+                    TypeTask typeTask = gson.fromJson(json, TypeTask.class);
+                    switch (typeTask.type) {
+                        case ("ADD"):
+                            todos.addTask(typeTask.task);
+                            break;
+                        case ("REMOVE"):
+                            todos.removeTask(typeTask.task);
+                            break;
+                    }
+                    out.println(todos.getAllTasks());
                 }
-                out.println(todos.getAllTasks());
-            } catch (IOException e) {
-                System.out.println("Не могу стартовать сервер");
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            System.out.println("Не могу стартовать сервер");
+            e.printStackTrace();
         }
     }
 }
